@@ -20,6 +20,9 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Future<Restaurant> fetchRestaurantData() async {
+
+    // TODO: Need to update this endpoint to the actual one
+    // TODO: Need to find way to secure API key
     final response = await http.get(
         'https://developers.zomato.com/api/v2.1/restaurant?res_id=17145495',
         headers: {'user-key': 'Replace with api key'});

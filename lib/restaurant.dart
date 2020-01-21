@@ -9,6 +9,8 @@ class Restaurant {
 //  var average_cost_for_two: Int
 //  var user_rating: Ratings
 
+  //TODO: Need to be able to serialize from a response of list
+  //TODO: Need to add nested classes of Location & Ratings
   Restaurant(this.name, this.cuisines, this.averageCostForTwo);
 
   String name;
