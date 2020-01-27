@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'searchscreen.dart';
 
+//TODO: Clean up so that state is lifted up
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key, this.title}) : super(key: key);
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:restaurant_bucket_list/models/restaurant.dart';
+import 'package:restaurant_bucket_list/restaurantList.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen();
@@ -11,26 +12,27 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  List<Restaurant> restaurants;
+  Future<List<Restaurant>> restaurants;
 
   @override
   void initState() {
     super.initState();
-    this.fetchRestaurantData();
+    restaurants = _fetchRestaurantData();
   }
 
-  Future<List<Restaurant>> fetchRestaurantData() async {
+  Future<List<Restaurant>> _fetchRestaurantData() async {
     // TODO: Need to find way to secure API key
     const url =
         'https://developers.zomato.com/api/v2.1/search?q=&lat=21.28277780&lon=-157.829444405';
     final response = await http
-        .get(url, headers: {'user-key': 'Replace with api key'});
+        .get(url, headers: {'user-key': 'Insert API Key'});
 
-    setState(() {
+    if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body)['restaurants'] as List;
-      restaurants = jsonData.map((json) => Restaurant.fromJson(json)).toList();
-    });
-    return restaurants;
+      return jsonData.map((json) => Restaurant.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load data');
+    }
   }
 
   @override
@@ -43,26 +45,17 @@ class _SearchScreenState extends State<SearchScreen> {
             labelText: 'Search query',
           ),
         ),
-        ListView.separated(
-          padding: EdgeInsets.all(8.0),
-          itemCount: restaurants.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              height: 50,
-              color: Colors.amber,
-              child: Column(children: <Widget>[
-                Text(restaurants[index].name),
-                Text(restaurants[index].cuisines),
-                Text(
-                    'Average Cost for Two: \$/${restaurants[index].averageCostForTwo}'),
-                Text('Address: ${restaurants[index].location.address}'),
-                Text(
-                    'Rated ${restaurants[index].userRatings.aggregateRating} by ${restaurants[index].userRatings.numberOfReviews} users')
-              ]),
-            );
+        FutureBuilder<List<Restaurant>>(
+          future: restaurants,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+              return RestaurantList(restaurants: snapshot.data);
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+            // By default, show a loading spinner.
+            return CircularProgressIndicator();
           },
-          separatorBuilder: (BuildContext context, int index) =>
-              const Divider(),
         ),
       ]),
     );
