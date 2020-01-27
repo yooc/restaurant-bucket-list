@@ -24,7 +24,7 @@ class _SearchScreenState extends State<SearchScreen> {
     const url =
         'https://developers.zomato.com/api/v2.1/search?q=&lat=21.28277780&lon=-157.829444405';
     final response = await http
-        .get(url, headers: {'user-key': '14473cfccb21331e95c2a5f551b0294e'});
+        .get(url, headers: {'user-key': 'Replace with api key'});
 
     setState(() {
       var jsonData = jsonDecode(response.body)['restaurants'] as List;
