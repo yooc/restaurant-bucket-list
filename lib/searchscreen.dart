@@ -43,23 +43,26 @@ class _SearchScreenState extends State<SearchScreen> {
             labelText: 'Search query',
           ),
         ),
-        Container(
-          height: 50,
-          color: Colors.amber[600],
-          child: Text(restaurants[0].name),
-          margin: EdgeInsets.all(8.0),
-        ),
-        Container(
-          height: 50,
-          color: Colors.amber[600],
-          child: Text(restaurants[0].location.address),
-          margin: EdgeInsets.all(8.0),
-        ),
-        Container(
-          height: 50,
-          color: Colors.amber[600],
-          child: Text(restaurants[0].userRatings.aggregateRating),
-          margin: EdgeInsets.all(8.0),
+        ListView.separated(
+          padding: EdgeInsets.all(8.0),
+          itemCount: restaurants.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              height: 50,
+              color: Colors.amber,
+              child: Column(children: <Widget>[
+                Text(restaurants[index].name),
+                Text(restaurants[index].cuisines),
+                Text(
+                    'Average Cost for Two: \$/${restaurants[index].averageCostForTwo}'),
+                Text('Address: ${restaurants[index].location.address}'),
+                Text(
+                    'Rated ${restaurants[index].userRatings.aggregateRating} by ${restaurants[index].userRatings.numberOfReviews} users')
+              ]),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) =>
+              const Divider(),
         ),
       ]),
     );
