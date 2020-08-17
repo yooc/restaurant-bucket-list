@@ -40,7 +40,7 @@ class Ratings {
   @JsonKey(name: 'aggregate_rating')
   String aggregateRating;
   @JsonKey(name: 'votes')
-  String numberOfReviews;
+  int numberOfReviews;
 
   factory Ratings.fromJson(Map<String, dynamic> json) =>
       _$RatingsFromJson(json);

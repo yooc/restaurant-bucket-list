@@ -10,6 +10,7 @@ class RestaurantList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       padding: EdgeInsets.all(8.0),
+      shrinkWrap: true,
       itemCount: restaurants.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(

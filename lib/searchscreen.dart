@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:restaurant_bucket_list/models/restaurant.dart';
 import 'package:restaurant_bucket_list/restaurantList.dart';
+
+// API KEY
+const String ZOMATO_API_KEY = 'Your API Key';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen();
@@ -21,11 +25,15 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Future<List<Restaurant>> _fetchRestaurantData() async {
-    // TODO: Need to find way to secure API key
     const url =
         'https://developers.zomato.com/api/v2.1/search?q=&lat=21.28277780&lon=-157.829444405';
-    final response = await http
-        .get(url, headers: {'user-key': 'Insert API Key'});
+
+    // Create storage
+    final _storage = new FlutterSecureStorage();
+    await _storage.write(key: 'zomatoApiKey', value: ZOMATO_API_KEY);
+    String value = await _storage.read(key: 'zomatoApiKey');
+
+    final response = await http.get(url, headers: {'user-key': value});
 
     if (response.statusCode == 200) {
       var jsonData = jsonDecode(response.body)['restaurants'] as List;
@@ -37,7 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SingleChildScrollView(
       child: Column(children: <Widget>[
         TextField(
           decoration: InputDecoration(
